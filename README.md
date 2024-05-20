@@ -5,7 +5,7 @@ All of the server is located in the `watch_watcher` folder. The respective main 
 
 To start the server run: `python.py manage.py runserver` (You might need to install django via pip `pip install django`)
 
-Also if the server does work try running `python.py manage.py makemigrations waste_watcher` and `python.py manage.py migrate`
+Also if the server doesn't work try running `python.py manage.py makemigrations waste_watcher` and `python.py manage.py migrate`
 
 # Testing
 
