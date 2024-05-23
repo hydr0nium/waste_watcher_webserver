@@ -4,21 +4,35 @@ from django.shortcuts import redirect
 from waste_watcher.models import User
 from django.views.decorators.csrf import csrf_exempt
 from webpush import send_group_notification
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+import secrets
+
+password = ""
 
 def scoreboard(request: HttpRequest):
-    try:
-        users = list(User.objects.values())
-    except:
-        users = []
-    template = loader.get_template("scoreboard.html")
-    context = {"users": users}
-    return HttpResponse(template.render(context, request))
+    if request.method == "GET":
+        if not check_password(password):
+            return HttpResponse("Authentication failed")
+        
+        try:
+            users = list(User.objects.values())
+        except:
+            users = []
+        template = loader.get_template("scoreboard.html")
+        context = {"users": users}
+        return HttpResponse(template.render(context, request))
+    return HttpResonse("Wrong Method")
 
 def commit(request: HttpRequest):
     if request.method == "GET":
         id = request.GET.get("id")
         points = request.GET.get("points")
         user = User.objects.get(id=id)
+        password = request.GET.get("pass")
+        if not check_password(password):
+            return HttpResponse("Authentication failed")
         try:
             points = int(points)
             user.score = user.score + points
@@ -36,6 +50,9 @@ def add_user(request: HttpRequest):
     if request.method == "GET":
         id = request.GET.get("id")
         username = request.GET.get("username")
+        password = request.GET.get("pass")
+        if not check_password(password):
+            return HttpResponse("Authentication failed")
         score = 0
         user: User = User(id=id, score=score, name=username)
         if User.objects.all().filter(id=id).exists():
@@ -45,27 +62,59 @@ def add_user(request: HttpRequest):
     return HttpResponse("Method not implemented")
 
 def reset(request: HttpRequest):
-    try:
-        User.objects.all().delete()
-    except:
-        return HttpResponse("Something went wrong when deleting all users")
-    return HttpResponse("The database has been cleared")
-
+    if request.method == "GET": 
+        password = request.GET.get("pass")
+        if not check_password(password):
+            return HttpResponse("Authentication failed")
+        try:
+            User.objects.all().delete()
+        except:
+            return HttpResponse("Something went wrong when deleting all users")
+        return HttpResponse("The database has been cleared")
+    return HttpResponse("Wrong Method")
 
 def sub(request: HttpRequest):
     webpush = {"group": "waste"}
     context = {"webpush": webpush}
     if request.method == "GET":
+        password = request.GET.get("pass")
+        if not check_password(password):
+            return HttpResponse("Authentication failed")
         #send_group_notification(group_name="waste", payload="worked", ttl=1000)
         template = loader.get_template("subscribe.html")
         return HttpResponse(template.render(context, request))
     
 def test(request:HttpRequest):
-    payload = {"head": "Waste Watcher - Interactive Systems", "body": "Trash is full", "icon": "https://images.pexels.com/photos/3806764/pexels-photo-3806764.jpeg"}
-    send_group_notification(group_name="waste", payload=payload, ttl=1000)
-    return HttpResponse("Send test notifcation")
+    if request.method == "GET":
+        password = request.GET.get("pass")
+        if not check_password(password):
+            return HttpResponse("Authentication failed")
+        payload = {"head": "Waste Watcher - Interactive Systems", "body": "Trash is full", "icon": "https://images.pexels.com/photos/3806764/pexels-photo-3806764.jpeg"}
+        send_group_notification(group_name="waste", payload=payload, ttl=1000)
+        return HttpResponse("Send test notifcation")
+    return HttpResponse("Wrong Method")
 
 def index(request: HttpRequest):
     response = redirect("/scoreboard")
     return response
+
+
+def load_password():
+    global password
+    if password == "":
+        try:
+            with open(BASE_DIR / 'password.txt', 'r') as f:
+                password = f.read().strip()
+        except FileNotFoundError:
+            password = secrets.token_urlsafe(42)
+        with open(BASE_DIR / 'password.txt', 'w') as f:
+            f.write(password)
+            
+
+def check_password(userpass: str):
+    load_password()
+    global password
+    if password == userpass:
+        return True
+    return False
 
