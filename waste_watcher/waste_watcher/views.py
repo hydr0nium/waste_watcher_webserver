@@ -59,6 +59,11 @@ def sub(request: HttpRequest):
         #send_group_notification(group_name="waste", payload="worked", ttl=1000)
         template = loader.get_template("subscribe.html")
         return HttpResponse(template.render(context, request))
+    
+def test(request:HttpRequest):
+    payload = {"head": "Waste Watcher - Interactive Systems", "body": "Trash is full", "icon": "https://images.pexels.com/photos/3806764/pexels-photo-3806764.jpeg"}
+    send_group_notification(group_name="waste", payload=payload, ttl=1000)
+    return HttpResponse("Send test notifcation")
 
 def index(request: HttpRequest):
     response = redirect("/scoreboard")
