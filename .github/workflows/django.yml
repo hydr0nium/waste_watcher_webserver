@@ -26,4 +26,5 @@ jobs:
         pip install django-webpush
     - name: Run Tests
       run: |
+        cd waste_watcher
         python manage.py test
