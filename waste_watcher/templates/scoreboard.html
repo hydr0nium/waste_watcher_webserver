@@ -1,4 +1,13 @@
 <html>
+    {% load static %}
+    
+<head>
+    <meta http-equiv="refresh" content="5" >
+
+</head>
+
+<body>
+
     {% for user in users %}
     <div class="wish-item">
         <strong>ID: </strong> {{user.id}}<br>
@@ -6,5 +15,9 @@
         <strong>Score: </strong>{{user.score}}<br>
     </div>
     {% endfor %}
+
+</body>
+
+
 
 </html>

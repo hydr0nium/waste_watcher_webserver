@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -24,5 +24,7 @@ urlpatterns = [
     path('scoreboard', views.scoreboard, name="scoreboard"),
     path('commit', views.commit, name="commit"),
     path('reset', views.reset, name="reset"),
-    path('add_user', views.add_user, name="add_user")
+    path('add_user', views.add_user, name="add_user"),
+    path('sub', views.sub, name="sub"),
+    path('webpush/', include('webpush.urls'))
 ]

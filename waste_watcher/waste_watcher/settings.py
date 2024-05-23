@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','http://127.0.0.1:8000']
+
 
 # Application definition
 
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'webpush',
     'waste_watcher'
 ]
 
@@ -49,6 +52,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+WEBPUSH_SETTINGS = {
+   "VAPID_PUBLIC_KEY": "BALJ9s-jujkei1wJ3DZ_FDjJsiHq2hQ9FqfSBKXArIDfqFjd_qbBcIf5TglBBXsVANd-ehwNWAStdIf5GQa-rfI",
+   "VAPID_PRIVATE_KEY": "iKC5v1BlcjKmadkIFWBNdILgUcRjox2odpZgKk1xBhs",
+   "VAPID_ADMIN_EMAIL": "admin@example.com"
+}
 
 ROOT_URLCONF = 'waste_watcher.urls'
 
