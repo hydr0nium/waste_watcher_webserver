@@ -27,4 +27,5 @@ jobs:
     - name: Run Tests
       run: |
         cd waste_watcher
+        echo -n "testpass" > password.txt
         python manage.py test
