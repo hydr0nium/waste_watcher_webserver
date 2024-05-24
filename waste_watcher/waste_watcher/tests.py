@@ -39,7 +39,7 @@ class ServerTest(TestCase):
         c = Client()
         res = c.get("/add_user?id=4&username=Testuser&pass=testpass")
         res = c.get("/commit?id=4&points=50&pass=testpass")
-        res = c.get("/reset&pass=testpass")
+        res = c.get("/reset?pass=testpass")
         self.assertIn("The database has been cleared", res.content.decode())
         res = c.get("/scoreboard&pass=testpass")
         res = res.content.decode("utf-8").replace("\n", "").replace(" ", "")
