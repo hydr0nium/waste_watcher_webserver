@@ -9,12 +9,14 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 import secrets
 
-password = ""
+global_pass = ""
 
 def scoreboard(request: HttpRequest):
     if request.method == "GET":
-        if not check_password(password):
-            return HttpResponse("Authentication failed")
+        
+        # password = request.GET.get("pass")
+        #if not check_password(password):
+        #    return HttpResponse("Authentication failed")
         
         try:
             users = list(User.objects.values())
@@ -100,21 +102,21 @@ def index(request: HttpRequest):
 
 
 def load_password():
-    global password
-    if password == "":
+    global global_pass
+    if global_pass == "":
         try:
             with open(BASE_DIR / 'password.txt', 'r') as f:
-                password = f.read().strip()
+                global_pass = f.read().strip()
         except FileNotFoundError:
-            password = secrets.token_urlsafe(42)
+            global_pass = secrets.token_urlsafe(42)
         with open(BASE_DIR / 'password.txt', 'w') as f:
-            f.write(password)
+            f.write(global_pass)
             
 
 def check_password(userpass: str):
     load_password()
-    global password
-    if password == userpass:
+    global global_pass
+    if global_pass == userpass:
         return True
     return False
 
