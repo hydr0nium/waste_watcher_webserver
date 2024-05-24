@@ -41,7 +41,7 @@ class ServerTest(TestCase):
         res = c.get("/commit?id=4&points=50&pass=testpass")
         res = c.get("/reset?pass=testpass")
         self.assertIn("The database has been cleared", res.content.decode())
-        res = c.get("/scoreboard&pass=testpass")
+        res = c.get("/scoreboard?pass=testpass")
         res = res.content.decode("utf-8").replace("\n", "").replace(" ", "")
         self.assertIn("<body></body>", res)
 
