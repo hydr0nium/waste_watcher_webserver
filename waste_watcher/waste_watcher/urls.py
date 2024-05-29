@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name="index"),
     path('scoreboard', views.scoreboard, name="scoreboard"),
-    path('commits', views.commit, name="commit"),
+    path('commit', views.commit, name="commit"),
     path('reset', views.reset, name="reset"),
     path('add_user', views.add_user, name="add_user"),
     path('sub', views.sub, name="sub"),
