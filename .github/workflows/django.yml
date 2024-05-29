@@ -1,5 +1,8 @@
 name: Django Pipeline
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ "main" ]
@@ -29,3 +32,20 @@ jobs:
         cd waste_watcher
         echo -n "testpass" > password.txt
         python manage.py test
+        
+  merge-with-production:
+    needs: build
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/checkout@v4
+    - name: Run merge
+      run: |
+        git config --global user.name 'Github Actions Integration'
+        git config --global user.email '<>'
+        git fetch --unshallow
+        git checkout production
+        git pull
+        git merge --no-ff main -m "Auto-merge main back to production"
+        git push
+        
+    
