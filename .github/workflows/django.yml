@@ -29,3 +29,19 @@ jobs:
         cd waste_watcher
         echo -n "testpass" > password.txt
         python manage.py test
+        
+  merge-with-production:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps: 
+    - uses: actions/checkout@v4
+    - name: Run merge
+      run: |
+        git config --global user.name 'Github Actions Integration'
+        git config --global user.email '<>'
+        git checkout production
+        git pull
+        git merge --no-ff main -m "Auto-merge main back to production"
+        git push
+        
+    
