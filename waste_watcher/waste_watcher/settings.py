@@ -33,7 +33,7 @@ except FileNotFoundError:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["wastewatcher.patchwork-security.de"]
+ALLOWED_HOSTS = ["wastewatcher.patchwork-security.de", "http://localhost:8000"]
 
 #CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','http://127.0.0.1:8000']
 
