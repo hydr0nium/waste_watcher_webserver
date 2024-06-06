@@ -27,5 +27,6 @@ urlpatterns = [
     path('add_user', views.add_user, name="add_user"),
     path('sub', views.sub, name="sub"),
     path('test', views.test, name="test"),
+    path("delete_user", views.delete_user, name="delete_user"),
     path('webpush/', include('webpush.urls'))
 ]

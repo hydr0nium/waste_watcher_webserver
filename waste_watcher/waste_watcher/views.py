@@ -63,6 +63,18 @@ def add_user(request: HttpRequest):
         return HttpResponse("User created")
     return HttpResponse("Method not implemented")
 
+def delete_user(request: HttpRequest):
+    if request.method == "GET":
+        id = request.GET.get("id")
+        password = request.GET.get("pass")
+        if not check_password(password):
+            return HttpResponse("Authentication failed")
+        if not User.objects.all().filter(id=id).exists():
+            return HttpResponse("User not found")
+        User.objects.all().filter(id=id).delete()
+        return HttpResponse("User deleted")
+    return HttpResponse("Method not implemented")
+
 def reset(request: HttpRequest):
     if request.method == "GET": 
         password = request.GET.get("pass")
