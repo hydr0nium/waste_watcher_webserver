@@ -109,8 +109,8 @@ def load_password():
                 global_pass = f.read().strip()
         except FileNotFoundError:
             global_pass = secrets.token_urlsafe(42)
-        with open(BASE_DIR / 'password.txt', 'w') as f:
-            f.write(global_pass)
+            with open(BASE_DIR / 'password.txt', 'w') as f:
+                f.write(global_pass)
             
 
 def check_password(userpass: str):
