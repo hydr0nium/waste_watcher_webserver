@@ -25,7 +25,7 @@ def scoreboard(request: HttpRequest):
         template = loader.get_template("scoreboard.html")
         context = {"users": users}
         return HttpResponse(template.render(context, request))
-    return HttpResonse("Wrong Method")
+    return HttpResponse("Wrong Method")
 
 def commit(request: HttpRequest):
     if request.method == "GET":
