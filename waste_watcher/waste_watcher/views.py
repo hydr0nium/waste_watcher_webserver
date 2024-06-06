@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.template import loader
-from django.shortcuts import redirect 
+from django.shortcuts import redirect, render
 from waste_watcher.models import User
 from django.views.decorators.csrf import csrf_exempt
 from webpush import send_group_notification
@@ -100,9 +100,23 @@ def index(request: HttpRequest):
     response = redirect("/scoreboard")
     return response
 
+def controls(request: HttpRequest):
+    if request.method == "GET":
+        password = request.GET.get("pass")
+        if not check_password(password):
+            return HttpResponse("Authentication failed")
+        template = loader.get_template("admin.html")
+        password = load_password()
+        print(password)
+        context = {"pass": password}
+        return HttpResponse(template.render(context, request))
+    return HttpResponse("Wrong Method")
+
+
 
 def load_password():
     global global_pass
+
     if global_pass == "":
         try:
             with open(BASE_DIR / 'password.txt', 'r') as f:
@@ -110,7 +124,8 @@ def load_password():
         except FileNotFoundError:
             global_pass = secrets.token_urlsafe(42)
             with open(BASE_DIR / 'password.txt', 'w') as f:
-                f.write(global_pass)
+                    f.write(global_pass)
+    return global_pass
             
 
 def check_password(userpass: str):

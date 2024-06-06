@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Request with Input Fields</title>
+</head>
+<body>
+    <h1>Create User</h1>
+    <label for="id">ID</label>
+    <input type="text" id="id">
+    <br>
+    <label for="username">Username:</label>
+    <input type="text" id="username">
+    <br>
+    <button id="createUser">Create User</button>
+
+    
+    <hr>
+
+    <h1>Test Push Notification</h1>
+    <button id="testNotify">Test</button>
+
+    <hr>
+
+    <h1>Add Points</h1>
+    <label for="id2">ID</label>
+    <input type="text" id="id2">
+    <label for="points">Points:</label>
+    <input type="text" id="points">
+    <button id="addPoints">Add Points</button>
+
+    <hr>
+
+
+    <h1>Clear Database</h1>
+    <button id="clearDatabase">Clear Database</button>
+
+    <hr>
+
+    <div id="responseContainer"></div>
+
+
+</body>
+
+
+<script>
+
+const password = "{{pass}}"
+urlbase = window.location.host
+
+
+document.getElementById('createUser').addEventListener('click', () => {
+    const id = document.getElementById('id').value;
+    const username = document.getElementById('username').value;
+
+    const url = `/add_user?id=${encodeURIComponent(id)}&username=${encodeURIComponent(username)}&pass=${encodeURIComponent(password)}`;
+
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('responseContainer').innerHTML = `<pre>${data}</pre>`;
+        })
+        .catch(error => {
+            document.getElementById('responseContainer').innerHTML = 'Error: ' + error;
+        });
+});
+
+
+document.getElementById('testNotify').addEventListener('click', () => {
+
+    const url = `/test?pass=${encodeURIComponent(password)}`;
+
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('responseContainer').innerHTML = `<pre>${data}</pre>`;
+        })
+        .catch(error => {
+            document.getElementById('responseContainer').innerHTML = 'Error: ' + error;
+        });
+});
+
+
+document.getElementById('addPoints').addEventListener('click', () => {
+    const id = document.getElementById('id2').value;
+    const points = document.getElementById('points').value;
+
+    const url = `/test?id=${encodeURIComponent(id)}&points=${encodeURIComponent(points)}&pass=${encodeURIComponent(password)}`;
+
+
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('responseContainer').innerHTML = `<pre>${data}</pre>`;
+        })
+        .catch(error => {
+            document.getElementById('responseContainer').innerHTML = 'Error: ' + error;
+        });
+});
+
+document.getElementById('clearDatabase').addEventListener('click', () => {
+
+const url = `/reset?pass=${encodeURIComponent(password)}`;
+
+fetch(url)
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('responseContainer').innerHTML = `<pre>${data}</pre>`;
+    })
+    .catch(error => {
+        document.getElementById('responseContainer').innerHTML = 'Error: ' + error;
+    });
+});
+
+</script>
+
+</html>
