@@ -18,6 +18,15 @@
     
     <hr>
 
+    <h1>Delete User</h1>
+    <label for="id3">ID</label>
+    <input type="text" id="id3">
+    <br>
+    <button id="deleteUser">Delete User</button>
+
+    
+    <hr>
+
     <h1>Test Push Notification</h1>
     <button id="testNotify">Test</button>
 
@@ -55,6 +64,21 @@ document.getElementById('createUser').addEventListener('click', () => {
     const username = document.getElementById('username').value;
 
     const url = `/add_user?id=${encodeURIComponent(id)}&username=${encodeURIComponent(username)}&pass=${encodeURIComponent(password)}`;
+
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('responseContainer').innerHTML = `<pre>${data}</pre>`;
+        })
+        .catch(error => {
+            document.getElementById('responseContainer').innerHTML = 'Error: ' + error;
+        });
+});
+
+document.getElementById('deleteUser').addEventListener('click', () => {
+    const id = document.getElementById('id3').value;
+
+    const url = `/delete_user?id=${encodeURIComponent(id)}&pass=${encodeURIComponent(password)}`;
 
     fetch(url)
         .then(response => response.text())
