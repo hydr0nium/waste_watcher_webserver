@@ -29,6 +29,14 @@ except FileNotFoundError:
     with open(BASE_DIR / 'secret.txt', 'w') as f:
         f.write(SECRET_KEY)
 
+try:
+    with open(BASE_DIR / 'password.txt', 'r') as f:
+        global_pass = f.read().strip()
+except FileNotFoundError:
+    global_pass = secrets.token_urlsafe(42)
+    with open(BASE_DIR / 'password.txt', 'w') as f:
+        f.write(global_pass)
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
