@@ -35,14 +35,19 @@
     <h1>Add Points</h1>
     <label for="id2">ID</label>
     <input type="text" id="id2">
+    <br>
     <label for="points">Points:</label>
     <input type="text" id="points">
+    <br>
     <button id="addPoints">Add Points</button>
 
     <hr>
 
 
     <h1>Clear Database</h1>
+    <label for="sec_check">Please add {{sec_check}}:</label>
+    <input type="text" id="sec_check">
+    <br>
     <button id="clearDatabase">Clear Database</button>
 
     <hr>
@@ -127,6 +132,12 @@ document.getElementById('clearDatabase').addEventListener('click', () => {
 
 const url = `/reset?pass=${encodeURIComponent(password)}`;
 
+const sec_check = document.getElementById('sec_check').value;
+if (sec_check !== "{{sec_check}}") {
+    alert("Security check failed for database reset")
+    location.reload()
+    return
+}
 fetch(url)
     .then(response => response.text())
     .then(data => {

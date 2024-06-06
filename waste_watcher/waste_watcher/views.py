@@ -5,9 +5,10 @@ from waste_watcher.models import User
 from django.views.decorators.csrf import csrf_exempt
 from webpush import send_group_notification
 from pathlib import Path
+import random, string
+import secrets
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-import secrets
 
 global_pass = ""
 
@@ -119,8 +120,8 @@ def controls(request: HttpRequest):
             return HttpResponse("Authentication failed")
         template = loader.get_template("admin.html")
         password = load_password()
-        print(password)
-        context = {"pass": password}
+        security_check = randomword(5)
+        context = {"pass": password, "sec_check": security_check}
         return HttpResponse(template.render(context, request))
     return HttpResponse("Wrong Method")
 
@@ -146,4 +147,8 @@ def check_password(userpass: str):
     if global_pass == userpass:
         return True
     return False
+
+def randomword(length):
+   letters = string.ascii_lowercase
+   return ''.join(random.choice(letters) for i in range(length))
 
