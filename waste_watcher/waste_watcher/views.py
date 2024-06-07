@@ -1,4 +1,4 @@
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.template import loader
 from django.shortcuts import redirect, render
 from waste_watcher.models import User
@@ -7,6 +7,7 @@ from webpush import send_group_notification
 from pathlib import Path
 import random, string
 import secrets
+import base64
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,8 +35,11 @@ def commit(request: HttpRequest):
         points = request.GET.get("points")
         user = User.objects.get(id=id)
         password = request.GET.get("pass")
-        if not check_password(password):
-            return HttpResponse("Authentication failed")
+        if not check_password(password) and not authorized(request):
+            res = HttpResponse('Unauthorized', status=401)
+            res["WWW-Authenticate"] = 'Basic realm="This is an easteregg. Good job", charset="UTF-8"'
+            return res
+
         try:
             points = int(points)
             user.score = user.score + points
@@ -51,11 +55,16 @@ def commit(request: HttpRequest):
 
 def add_user(request: HttpRequest):
     if request.method == "GET":
+
+        password = request.GET.get("pass")
+        if not check_password(password) and not authorized(request):
+            res = HttpResponse('Unauthorized', status=401)
+            res["WWW-Authenticate"] = 'Basic realm="This is an easteregg. Good job", charset="UTF-8"'
+            return res
+
         id = request.GET.get("id")
         username = request.GET.get("username")
-        password = request.GET.get("pass")
-        if not check_password(password):
-            return HttpResponse("Authentication failed")
+            
         score = 0
         user: User = User(id=id, score=score, name=username)
         if User.objects.all().filter(id=id).exists():
@@ -68,8 +77,10 @@ def delete_user(request: HttpRequest):
     if request.method == "GET":
         id = request.GET.get("id")
         password = request.GET.get("pass")
-        if not check_password(password):
-            return HttpResponse("Authentication failed")
+        if not check_password(password) and not authorized(request):
+            res = HttpResponse('Unauthorized', status=401)
+            res["WWW-Authenticate"] = 'Basic realm="This is an easteregg. Good job", charset="UTF-8"'
+            return res
         if not User.objects.all().filter(id=id).exists():
             return HttpResponse("User not found")
         User.objects.all().filter(id=id).delete()
@@ -79,8 +90,10 @@ def delete_user(request: HttpRequest):
 def reset(request: HttpRequest):
     if request.method == "GET": 
         password = request.GET.get("pass")
-        if not check_password(password):
-            return HttpResponse("Authentication failed")
+        if not check_password(password) and not authorized(request):
+            res = HttpResponse('Unauthorized', status=401)
+            res["WWW-Authenticate"] = 'Basic realm="This is an easteregg. Good job", charset="UTF-8"'
+            return res
         try:
             User.objects.all().delete()
         except:
@@ -93,8 +106,10 @@ def sub(request: HttpRequest):
     context = {"webpush": webpush}
     if request.method == "GET":
         password = request.GET.get("pass")
-        if not check_password(password):
-            return HttpResponse("Authentication failed")
+        if not check_password(password) and not authorized(request):
+            res = HttpResponse('Unauthorized', status=401)
+            res["WWW-Authenticate"] = 'Basic realm="This is an easteregg. Good job", charset="UTF-8"'
+            return res
         #send_group_notification(group_name="waste", payload="worked", ttl=1000)
         template = loader.get_template("subscribe.html")
         return HttpResponse(template.render(context, request))
@@ -102,8 +117,10 @@ def sub(request: HttpRequest):
 def test(request:HttpRequest):
     if request.method == "GET":
         password = request.GET.get("pass")
-        if not check_password(password):
-            return HttpResponse("Authentication failed")
+        if not check_password(password) and not authorized(request):
+            res = HttpResponse('Unauthorized', status=401)
+            res["WWW-Authenticate"] = 'Basic realm="This is an easteregg. Good job", charset="UTF-8"'
+            return res
         payload = {"head": "Waste Watcher - Interactive Systems", "body": "Trash is full", "icon": "https://images.pexels.com/photos/3806764/pexels-photo-3806764.jpeg"}
         send_group_notification(group_name="waste", payload=payload, ttl=1000)
         return HttpResponse("Send test notifcation")
@@ -116,8 +133,10 @@ def index(request: HttpRequest):
 def controls(request: HttpRequest):
     if request.method == "GET":
         password = request.GET.get("pass")
-        if not check_password(password):
-            return HttpResponse("Authentication failed")
+        if not check_password(password) and not authorized(request):
+            res = HttpResponse('Unauthorized', status=401)
+            res["WWW-Authenticate"] = 'Basic realm="This is an easteregg. Good job", charset="UTF-8"'
+            return res
         template = loader.get_template("admin.html")
         password = load_password()
         security_check = randomword(5)
@@ -147,6 +166,28 @@ def check_password(userpass: str):
     if global_pass == userpass:
         return True
     return False
+
+def authorized(request: HttpRequest):
+    auth_header: str = request.META.get("HTTP_AUTHORIZATION")
+    if auth_header is None:
+        print("Not auth header")
+        return False
+    if "Basic" not in auth_header:
+        print("Not basic auth header")
+        return False
+    print(auth_header)
+    login_data = base64.b64decode(auth_header.split(" ")[1]).decode("utf-8")
+    print(login_data)
+    if ":" not in login_data:
+        return False
+    username = login_data.split(":")[0]
+    password = login_data.split(":")[1]
+    if username != "waste_watcher" and password != load_password():
+        return False
+    return True
+    
+
+
 
 def randomword(length):
    letters = string.ascii_lowercase
