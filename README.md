@@ -8,7 +8,9 @@ To start the server run: `python manage.py runserver` or `python manage.py runse
 Also if the server doesn't work try running `python manage.py makemigrations` and `python manage.py migrate`
 
 # Testing
-You can access a control panel at `/controls?pass=<pass>`. The password can be found in the waste_watcher directory in the `password.txt` file.
+You can access a control panel at `/controls`. The password can be found in the waste_watcher directory in the `password.txt` file. The username is `waste_watcher`
+You can alternativly use the HTTP paramter `pass` in request to bypass the manual authentication for automation. E.g. `/controls?pass=<pass>`. `<pass>` is the same passwort from the passwort.txt file.
+For the `passwort.txt` to be generated the server needs to have run at least once. 
 
 
 
