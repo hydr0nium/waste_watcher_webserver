@@ -1,0 +1,148 @@
+:root {
+    --background: #ffffff;
+    --bottombar: #D9D9D9;
+    --lgrey: #7C7C7C;
+    --mgrey: #5F5F5F;
+    --dgrey: #000000;
+    --beige: #FFE4D0;
+    --red: #FBB9C3;
+    --blue: #6FC2EC;
+    --lblue: #B8E6FE;
+    --green: #B2DBC9;
+    --purple: #DDD8F6;
+    --error: #FF0000;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 5px;
+    background-color: var(--background);
+    overflow: hidden;
+}
+
+#back {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: var(--blue);
+    font-size: 25px;
+    text-decoration: underline;
+    z-index: 100;
+}
+
+.name{
+    margin: 75px;
+}
+
+.wish-item {
+    margin: auto;
+    margin-top: 20px;
+    padding: 7px;
+    height: 70px;
+    width: 200px;
+    border-radius: 15px;
+    background-image: linear-gradient(rgb(107, 106, 186), rgb(69, 66, 143))
+}
+
+.bg-element {
+    width: 320px;
+    height: 240px;
+    border-radius: 100%;
+    background-color: var(--beige);
+    z-index: -1;
+}
+
+#bg-element1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-30%, -20%);
+}
+
+#bg-element2 {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+}
+
+#bg-element3 {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    transform: translate(20%, 30%);
+}
+
+#info {
+    font-weight: bold;
+    color: var(--blue);
+    text-decoration: underline;
+}
+
+#help {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--blue);
+    text-decoration: underline;
+}
+
+.close {
+    background-color: var(--error);
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(25%, -25%);
+    box-shadow: black 0 0 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background);
+    z-index: 101;
+}
+
+.loader::after {
+    content: "";
+    width: 75px;
+    height: 75px;
+    border: 15px solid var(--lgrey);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: loading 0.75s ease infinite;
+}
+
+@keyframes loading {
+    from {transform: rotate(0turn)}
+    to {transform: rotate(1turn)}
+}
+
+.scrollContainer {
+    height: 27vh;
+    overflow-y: scroll;
+    background-color: rgba(0,0,0,0.1);
+    margin: 5px;
+}
+
+.scrollContainer img {
+    width: 20px;
+    height: auto;
+}
