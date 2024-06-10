@@ -3,3 +3,4 @@ secret.txt
 password.txt
 **/__pycache__/**
 **/migrations/**
+startserver.bat
