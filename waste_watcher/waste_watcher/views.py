@@ -22,6 +22,7 @@ def scoreboard(request: HttpRequest):
         
         try:
             users = list(User.objects.values())
+            users.sort(key=lambda u: u['score'], reverse=True)
         except:
             users = []
         template = loader.get_template("scoreboard.html")
