@@ -115,7 +115,7 @@ document.getElementById('addPoints').addEventListener('click', () => {
     const id = document.getElementById('id2').value;
     const points = document.getElementById('points').value;
 
-    const url = `/test?id=${encodeURIComponent(id)}&points=${encodeURIComponent(points)}&pass=${encodeURIComponent(password)}`;
+    const url = `/commit?id=${encodeURIComponent(id)}&points=${encodeURIComponent(points)}&pass=${encodeURIComponent(password)}`;
 
 
     fetch(url)
