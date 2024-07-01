@@ -118,7 +118,7 @@ def sub(request: HttpRequest):
         template = loader.get_template("subscribe.html")
         return HttpResponse(template.render(context, request))
     
-def test(request:HttpRequest):
+def notify(request:HttpRequest):
     if request.method == "GET":
         password = request.GET.get("pass")
         if not check_password(password) and not authorized(request):
