@@ -1,13 +1,15 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.template import loader
 from django.shortcuts import redirect, render
-from waste_watcher.models import User
+from waste_watcher.models import User, Trashbin
 from django.views.decorators.csrf import csrf_exempt
 from webpush import send_group_notification
 from pathlib import Path
 import random, string
 import secrets
 import base64
+from datetime import datetime
+import math
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,8 +35,8 @@ def scoreboard(request: HttpRequest):
 def commit(request: HttpRequest):
     if request.method == "GET":
         id = request.GET.get("id")
-        points = request.GET.get("points")
         user = User.objects.get(id=id)
+        points = calculate_points(user)
         password = request.GET.get("pass")
         if not check_password(password) and not authorized(request):
             res = HttpResponse('Unauthorized', status=401)
@@ -176,9 +178,7 @@ def authorized(request: HttpRequest):
     if "Basic" not in auth_header:
         print("Not basic auth header")
         return False
-    print(auth_header)
     login_data = base64.b64decode(auth_header.split(" ")[1]).decode("utf-8")
-    print(login_data)
     if ":" not in login_data:
         return False
     username = login_data.split(":")[0]
@@ -188,9 +188,67 @@ def authorized(request: HttpRequest):
     return True
     
 
-
-
 def randomword(length):
    letters = string.ascii_lowercase
    return ''.join(random.choice(letters) for i in range(length))
 
+
+def calculate_points(user: User):
+    last_time = datetime.timestamp(user.last_time_used)
+    current_time = datetime.timestamp(datetime.now())
+    time_diff = int(current_time-last_time)
+    points = min(50, math.ceil(time_diff / 1728))
+    return points
+
+
+def set_fill_amount(request: HttpRequest):
+    if request.method == "GET":
+
+        password = request.GET.get("pass")
+        if not check_password(password) and not authorized(request):
+            res = HttpResponse('Unauthorized', status=401)
+            res["WWW-Authenticate"] = 'Basic realm="This is an easteregg. Good job", charset="UTF-8"'
+            return res
+        try:
+            amount = float(request.GET.get("amount"))
+        except:
+            return HttpResponse("Method not implemented")
+        trashcan = get_trashbin_model()
+        trashcan.amount = amount
+        trashcan.save()
+        
+        return HttpResponse("Updated Trashcan amount")
+    return HttpResponse("Method not implemented")
+
+
+def set_max_amount(request: HttpRequest):
+    if request.method == "GET":
+
+        password = request.GET.get("pass")
+        if not check_password(password) and not authorized(request):
+            res = HttpResponse('Unauthorized', status=401)
+            res["WWW-Authenticate"] = 'Basic realm="This is an easteregg. Good job", charset="UTF-8"'
+            return res
+
+        try:
+            amount = float(request.GET.get("amount"))
+        except:
+            return HttpResponse("Method not implemented")
+        trashcan = get_trashbin_model()
+        trashcan.amount = amount
+        trashcan.save()
+        
+        return HttpResponse("Updated max Trashcan amount")
+    return HttpResponse("Method not implemented")
+    
+
+
+def get_trashbin_model():
+
+
+    if Trashbin.objects.all().filter(id=0).exists():
+        return Trashbin.objects.get(id=0)
+    t = Trashbin()
+    t.save()
+    return t
+    

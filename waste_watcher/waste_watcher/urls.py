@@ -28,5 +28,7 @@ urlpatterns = [
     path('sub', views.sub, name="sub"),
     path('test', views.test, name="test"),
     path("delete_user", views.delete_user, name="delete_user"),
+    path("set_fill_amount", views.set_fill_amount, name="set_fill_amount"),
+    path("set_max_amount", views.set_max_amount, name="set_max_amount"),
     path('webpush/', include('webpush.urls'))
 ]

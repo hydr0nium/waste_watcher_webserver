@@ -32,13 +32,23 @@ class ServerTest(TestCase):
     def test_commit(self):
         c = Client()
         res = c.get("/add_user?id=4&username=Testuser&pass=testpass")
-        res = c.get("/commit?id=4&points=50&pass=testpass")
+        res = c.get("/commit?id=4&pass=testpass")
         self.assertIn("Score of User", res.content.decode("utf-8"))
+
+    def test_set_fill(self):
+        c = Client()
+        res = c.get("/set_fill_amount?amount=30&pass=testpass")
+        self.assertIn("Updated Trashcan amount", res.content.decode("utf-8"))
+
+    def test_max_fill(self):
+        c = Client()
+        res = c.get("/set_max_amount?amount=30&pass=testpass")
+        self.assertIn("Updated max Trashcan amount", res.content.decode("utf-8"))
 
     def test_resetdb(self):
         c = Client()
         res = c.get("/add_user?id=4&username=Testuser&pass=testpass")
-        res = c.get("/commit?id=4&points=50&pass=testpass")
+        res = c.get("/commit?id=4&pass=testpass")
         res = c.get("/reset?pass=testpass")
         self.assertIn("The database has been cleared", res.content.decode())
         res = c.get("/scoreboard?pass=testpass")
