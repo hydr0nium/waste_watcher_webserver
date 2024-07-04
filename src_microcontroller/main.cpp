@@ -18,8 +18,8 @@ Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
 uint8_t getFingerprintID();
 Servo servo;
 
-const char *ssid = "Honor 9 Lite K";
-const char *password = "saarsec1337";
+const char *ssid = "WlanID";
+const char *password = "Password";
 
 String Servername = "https://wastewatcher.patchwork-security.de:8000";
 String pass = "pass=Uo0TymQfjJJ8US9csma92wYQyy9rKFFkPdtN0heV4OpBPHvd33EZpN-h";
