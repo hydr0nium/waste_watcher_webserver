@@ -68,7 +68,7 @@ document.getElementById('createUser').addEventListener('click', () => {
     const id = document.getElementById('id').value;
     const username = document.getElementById('username').value;
 
-    const url = `/add_user?id=${encodeURIComponent(id)}&username=${encodeURIComponent(username)}`;
+    const url = `/api/add_user?id=${encodeURIComponent(id)}&username=${encodeURIComponent(username)}`;
 
     fetch(url)
         .then(response => response.text())
@@ -83,7 +83,7 @@ document.getElementById('createUser').addEventListener('click', () => {
 document.getElementById('deleteUser').addEventListener('click', () => {
     const id = document.getElementById('id3').value;
 
-    const url = `/delete_user?id=${encodeURIComponent(id)}`;
+    const url = `/api/delete_user?id=${encodeURIComponent(id)}`;
 
     fetch(url)
         .then(response => response.text())
@@ -98,7 +98,7 @@ document.getElementById('deleteUser').addEventListener('click', () => {
 
 document.getElementById('testNotify').addEventListener('click', () => {
 
-    const url = `/notify`;
+    const url = `/api/notify`;
 
     fetch(url)
         .then(response => response.text())
@@ -115,7 +115,7 @@ document.getElementById('addPoints').addEventListener('click', () => {
     const id = document.getElementById('id2').value;
     const points = document.getElementById('points').value;
 
-    const url = `/commit?id=${encodeURIComponent(id)}&points=${encodeURIComponent(points)}`;
+    const url = `/api/commit?id=${encodeURIComponent(id)}&points=${encodeURIComponent(points)}`;
 
 
     fetch(url)
@@ -130,7 +130,7 @@ document.getElementById('addPoints').addEventListener('click', () => {
 
 document.getElementById('clearDatabase').addEventListener('click', () => {
 
-const url = `/reset`;
+const url = `/api/reset`;
 
 const sec_check = document.getElementById('sec_check').value;
 if (sec_check !== "{{sec_check}}") {
