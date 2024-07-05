@@ -22,7 +22,7 @@ const char *ssid = "WlanID";
 const char *password = "Password";
 
 String Servername = "https://wastewatcher.patchwork-security.de:8000";
-String pass = "pass=Uo0TymQfjJJ8US9csma92wYQyy9rKFFkPdtN0heV4OpBPHvd33EZpN-h";
+String pass = "pass=password";
 
 const int trigPin1 = D8;
 const int echoPin1 = D7;
