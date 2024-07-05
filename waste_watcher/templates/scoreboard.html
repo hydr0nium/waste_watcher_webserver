@@ -31,16 +31,17 @@
     </div>
     <br>
     <br>
-
-    <div class="card text-center text-white bg-success mb-3 mx-auto shadow" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">{{first.name}}</h5>
-            <p class="card-text">
-            <strong>ID: </strong> {{first.id}}<br>
-            <strong>Score: </strong>{{first.score}}<br>
-            </p>
+    {% if first %}
+        <div class="card text-center text-white bg-success mb-3 mx-auto shadow" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{first.name}}</h5>
+                <p class="card-text">
+                <strong>ID: </strong> {{first.id}}<br>
+                <strong>Score: </strong>{{first.score}}<br>
+                </p>
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     {% for user in users %}
     <div class="card text-center text-white bg-secondary mb-3 mx-auto shadow" style="width: 18rem;">
