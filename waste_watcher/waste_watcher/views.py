@@ -28,7 +28,8 @@ def scoreboard(request: HttpRequest):
         except:
             users = []
         template = loader.get_template("scoreboard.html")
-        context = {"users": users}
+        trashbin = get_trashbin_model()
+        context = {"users": users, "fillstate": trashbin.amount}
         return HttpResponse(template.render(context, request))
     return HttpResponse("Wrong Method")
 
