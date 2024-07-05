@@ -64,7 +64,7 @@ def add_user(request: HttpRequest):
         id = request.GET.get("id")
         username = request.GET.get("username")
         
-        timestamp = date.fromisoformat('20000101')
+        timestamp = date.fromisoformat('2000-01-01')
         score = 0
         user: User = User(id=id, score=score, name=username, last_time_used=timestamp)
         if User.objects.all().filter(id=id).exists():
