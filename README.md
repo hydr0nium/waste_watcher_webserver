@@ -14,7 +14,10 @@ For the `passwort.txt` to be generated the server needs to have run at least onc
 
 # Githooks
 To use the githooks to run tests before push please use this command:
-`git config core.hooksPath .githooks`
+
+`git config core.hooksPath .githooks/windows` for Windows
+
+`git config core.hooksPath .githooks/linux` for linux
 
 # Dependencies:
  `pip install -r requirements.txt`
