@@ -19,16 +19,16 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('controls', views.controls, name="controls"),
     path('', views.index, name="index"),
+    path('api/controls', views.controls, name="controls"),
     path('scoreboard', views.scoreboard, name="scoreboard"),
-    path('commit', views.commit, name="commit"),
-    path('reset', views.reset, name="reset"),
-    path('add_user', views.add_user, name="add_user"),
+    path('api/commit', views.commit, name="commit"),
+    path('api/reset', views.reset, name="reset"),
+    path('api/add_user', views.add_user, name="add_user"),
     path('sub', views.sub, name="sub"),
-    path('notify', views.notify, name="test"),
-    path("delete_user", views.delete_user, name="delete_user"),
-    path("set_fill_amount", views.set_fill_amount, name="set_fill_amount"),
-    path("set_max_amount", views.set_max_amount, name="set_max_amount"),
+    path('api/notify', views.notify, name="test"),
+    path("api/delete_user", views.delete_user, name="delete_user"),
+    path("api/set_fill_amount", views.set_fill_amount, name="set_fill_amount"),
+    path("api/set_max_amount", views.set_max_amount, name="set_max_amount"),
     path('webpush/', include('webpush.urls'))
 ]
