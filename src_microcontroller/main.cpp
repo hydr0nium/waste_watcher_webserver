@@ -3,6 +3,7 @@
 #include <Adafruit_Fingerprint.h>
 #include <Servo.h>
 #include <ESP8266WiFi.h>
+#include <WifiClientSecureBearSSL.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 #include <SoftwareSerial.h>
@@ -18,11 +19,12 @@ Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
 uint8_t getFingerprintID();
 Servo servo;
 
-const char *ssid = "WlanID";
-const char *password = "Password";
+const char *ssid = "Wlanid";
+const char *password = "password";
 
-String Servername = "https://wastewatcher.patchwork-security.de:8000";
-String pass = "pass=password";
+const String Servername = "https://wastewatcher.patchwork-security.de:8000";
+const char* pass = "password";
+const char* username = "wastewatcher";
 
 const int trigPin1 = D8;
 const int echoPin1 = D7;
@@ -36,14 +38,13 @@ float currentfillstate = 0.0;
 
 void initUltrasonicBaseDistance();
 float getFillstate(int);
-void send_full_notify();
 float getBaseDepth(int);
 
 void setup()
 {
   Serial.begin(9600);
 
-  //servo.attach(D0);
+  // servo.attach(D0);
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
   while (WiFi.status() != WL_CONNECTED)
@@ -182,18 +183,26 @@ uint8_t getFingerprintID()
   Serial.print(finger.fingerID);
   Serial.print(" with confidence of ");
   Serial.println(finger.confidence);
-  WiFiClient client;
+  std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+  client->setInsecure();
   HTTPClient http;
+  http.setAuthorization(username, password);
   String serverpath;
   int responsecode;
   float dist;
 
   float amount = getFillstate(15);
-  if (amount >= 90) {
-    send_full_notify();
+  if (amount >= 90)
+  {
+    String serverpath = Servername + "/api/notify";
+    Serial.println(serverpath);
+    http.begin(*client, serverpath.c_str());
+    int responsecode = http.GET();
+    Serial.println(responsecode);
+    Serial.print("Response: ");
+    Serial.println(http.getString());
     return -1;
   }
-
 
   servo.writeMicroseconds(OPEN);
   // This opens the trashcan and waits for something the be thrown in and closes after a certain amount of time
@@ -206,14 +215,13 @@ uint8_t getFingerprintID()
     if (dist < base_distance)
     {
 
-      serverpath = Servername + "/commit?id=" + finger.fingerID + "&" + pass;
+      serverpath = Servername + "/api/commit?id=" + finger.fingerID;
       Serial.println(serverpath);
-      http.begin(client, serverpath.c_str());
+      http.begin(*client, serverpath.c_str());
       responsecode = http.GET();
       Serial.println(responsecode);
       Serial.print("Response: ");
       Serial.println(http.getString());
-
 
       break;
     }
@@ -224,23 +232,31 @@ uint8_t getFingerprintID()
 
   // Set fill amount
   amount = getFillstate(15);
-  serverpath = Servername + "/set_fill_amount?amount=" + amount + "&" + pass;
+  Serial.print("Fillsate after insertion:");
+  Serial.println(amount);
+  serverpath = Servername + "/api/set_fill_amount?amount=" + amount;
   Serial.println(serverpath);
-  http.begin(client, serverpath.c_str());
+  http.begin(*client, serverpath.c_str());
   responsecode = http.GET();
   Serial.println(responsecode);
   Serial.print("Response: ");
   Serial.println(http.getString());
 
   // Check if "full"
-  if (amount >= 90) {
-    send_full_notify();
+  if (amount >= 90)
+  {
+    String serverpath = Servername + "/api/notify";
+    Serial.println(serverpath);
+    http.begin(*client, serverpath.c_str());
+    int responsecode = http.GET();
+    Serial.println(responsecode);
+    Serial.print("Response: ");
+    Serial.println(http.getString());
+    return -1;
   }
 
   return finger.fingerID;
 }
-
-
 
 float getFillstate(int timesToPing)
 {
@@ -259,11 +275,11 @@ float getFillstate(int timesToPing)
     {
       biggest = depth;
     }
-
   }
-  float temp=base_depth - biggest;
-  if(temp < 0.0){
-    temp=0;
+  float temp = base_depth - biggest;
+  if (temp < 0.0)
+  {
+    temp = 0;
   }
   // returns how much the trashcan is full 0 = empty, 100 = full
   return (((temp) / base_depth) * 100.0);
@@ -272,24 +288,11 @@ float getFillstate(int timesToPing)
 void initUltrasonicBaseDistance()
 {
   base_distance = ((ultrasonic_1.dist() + ultrasonic_1.dist()) / 2) - 1;
-  base_depth = getBaseDepth(15);//((ultrasonic_2.dist() + ultrasonic_2.dist()) / 2) - 1;
+  base_depth = getBaseDepth(15); //((ultrasonic_2.dist() + ultrasonic_2.dist()) / 2) - 1;
 }
 
-
-void send_full_notify() {
-
-  WiFiClient client;
-  HTTPClient http;
-  String serverpath = Servername + "/notify?" + pass;
-  Serial.println(serverpath);
-  http.begin(client, serverpath.c_str());
-  int responsecode = http.GET();
-  Serial.println(responsecode);
-  Serial.print("Response: ");
-  Serial.println(http.getString());
-}
-
-float getBaseDepth(int timesToPing){
+float getBaseDepth(int timesToPing)
+{
   if (timesToPing > 15)
   {
     timesToPing = 15;
@@ -304,7 +307,6 @@ float getBaseDepth(int timesToPing){
     {
       biggest = depth;
     }
-
   }
   return biggest;
 }
