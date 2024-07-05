@@ -1,0 +1,17 @@
+C:/Program\ Files/Git/bin/sh.exe
+
+
+local_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [[ "$local_branch" == "production" ]]; then
+    echo "Can not push to production branch"
+    exit 1
+fi
+
+cd waste_watcher
+python manage.py test
+if [ $? -ne 0 ]; then
+    echo "Tests failed. Refused push"
+    exit 1
+fi
+exit 0
