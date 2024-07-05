@@ -29,7 +29,11 @@ def scoreboard(request: HttpRequest):
             users = []
         template = loader.get_template("scoreboard.html")
         trashbin = get_trashbin_model()
-        context = {"users": users, "fillstate": trashbin.amount}
+
+        if len(users) > 1:
+            first = users[0]
+            users = users[1:]
+        context = {"first": first, "users": users, "fillstate": int(trashbin.amount)}
         return HttpResponse(template.render(context, request))
     return HttpResponse("Wrong Method")
 
@@ -175,11 +179,9 @@ def check_password(userpass: str):
 def authorized(request: HttpRequest):
     auth_header: str = request.META.get("HTTP_AUTHORIZATION")
     if auth_header is None:
-        print("Not auth header")
-        return False
+                return False
     if "Basic" not in auth_header:
-        print("Not basic auth header")
-        return False
+                return False
     login_data = base64.b64decode(auth_header.split(" ")[1]).decode("utf-8")
     if ":" not in login_data:
         return False
@@ -247,10 +249,9 @@ def set_max_amount(request: HttpRequest):
 
 def get_trashbin_model():
 
-
     if Trashbin.objects.all().filter(id=0).exists():
         return Trashbin.objects.get(id=0)
-    t = Trashbin()
+    t = Trashbin(id=0)
     t.save()
     return t
     
