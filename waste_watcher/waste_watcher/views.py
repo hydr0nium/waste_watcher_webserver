@@ -8,7 +8,7 @@ from pathlib import Path
 import random, string
 import secrets
 import base64
-from datetime import datetime, date
+from datetime import datetime
 import math
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -64,7 +64,7 @@ def add_user(request: HttpRequest):
         id = request.GET.get("id")
         username = request.GET.get("username")
         
-        timestamp = date.fromisoformat('20000101')
+        timestamp = datetime(2000, 1, 1)
         score = 0
         user: User = User(id=id, score=score, name=username, last_time_used=timestamp)
         if User.objects.all().filter(id=id).exists():
