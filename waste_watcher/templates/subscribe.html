@@ -8,41 +8,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
-        .alert-fixed {
-            position: fixed;
-            top: 3%;
-            left: 33%;
-            width: 100%;
-            z-index: 9999;
-            border-radius: 10px;
-        }
+
         .stop-scrolling {
               height: 100%;
               overflow: hidden;
         }
     </style>
 </head>
-<body onload="main()" class="stop-scrolling">
+<body  class="stop-scrolling">
 <br>
 <div class="row justify-content-center h-100 align-items-center">
     <div class="col-3 text-center col-sm3">
         {% webpush_button with_class="shadow btn-block btn btn-warning btn-lg " %}
     </div>
 </div>
-
-<script>
-    function main() {
-        let wm = document.getElementById("webpush-message")
-        if (wm == null) {
-            return;
-        }
-        wm.className += "alert alert-info alert-fixed shadow col-md-4 col-md-offset-4"
-        wm.hidden = false
-        if (wm.innerHTML === "") {
-            wm.innerHTML = "Subscribe to be notified!"
-        }
-    }
-</script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
