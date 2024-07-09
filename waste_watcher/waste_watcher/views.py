@@ -104,7 +104,10 @@ def sub(request: HttpRequest):
     
 def notify(request:HttpRequest):
     if request.method == "GET":
-        payload = {"head": "Waste Watcher - Interactive Systems", "body": "Trash is full", "icon": "https://images.pexels.com/photos/3806764/pexels-photo-3806764.jpeg"}
+        payload = {"head": "Waste Watcher - Interactive Systems", 
+                   "body": "Trash is full", 
+                   "icon": "https://images.pexels.com/photos/3806764/pexels-photo-3806764.jpeg",
+                   "url": "https://wastewatcher.patchwork-security.de:8000/sub"}
         send_group_notification(group_name="waste", payload=payload, ttl=1000)
         return HttpResponse("Send test notifcation")
     return HttpResponse("Wrong Method")
