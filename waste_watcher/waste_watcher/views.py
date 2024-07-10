@@ -32,8 +32,9 @@ def scoreboard(request: HttpRequest):
         trashbin = get_trashbin_model()
         first = None
         if len(users) > 1:
-            first = users[0]
-            users = users[1:]
+            if users[0]["score"] > 0:
+                first = users[0]
+                users = users[1:]
         context = {"first": first, "users": users, "fillstate": int(trashbin.amount)}
         return HttpResponse(template.render(context, request))
     return HttpResponse("Wrong Method")
